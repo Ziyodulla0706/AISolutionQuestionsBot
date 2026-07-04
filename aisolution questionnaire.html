@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AISolution.uz — AI Voice Agent Анкета</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --border: #1e1e2e;
+    --border-hover: #2d2d42;
+    --accent: #6c63ff;
+    --accent-dim: rgba(108, 99, 255, 0.12);
+    --accent-glow: rgba(108, 99, 255, 0.25);
+    --text-primary: #f0f0f8;
+    --text-secondary: #8888a8;
+    --text-muted: #44445a;
+    --success: #34d399;
+    --input-bg: #0e0e16;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .logo-icon::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .logo-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-text span {
+    color: var(--accent);
+  }
+
+  .header-badge {
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 100px 24px 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    margin-bottom: 56px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── SECTIONS ── */
+  .section-block {
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── QUESTION ── */
+  .question {
+    margin-bottom: 20px;
+  }
+
+  .question label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .question label .q-num {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    margin-right: 6px;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .question input[type="text"],
+  .question textarea,
+  .question select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    resize: none;
+  }
+
+  .question input[type="text"]:focus,
+  .question textarea:focus,
+  .question select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .question input::placeholder,
+  .question textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  .question textarea {
+    min-height: 80px;
+  }
+
+  /* inline grid for short fields */
+  .q-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .q-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* chip-select for languages */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .chip {
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    background: transparent;
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .chip.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── CONTACT SECTION ── */
+  .contact-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  .contact-section .section-title {
+    border-color: var(--border-hover);
+    margin-bottom: 20px;
+  }
+
+  /* ── SUBMIT ── */
+  .submit-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .submit-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 28px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:active { transform: scale(0.98); }
+
+  .btn-submit svg {
+    transition: transform 0.15s;
+  }
+
+  .btn-submit:hover svg { transform: translateX(3px); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    background: var(--surface);
+    border: 1px solid var(--success);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--success);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  #toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  footer strong {
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 560px) {
+    header { padding: 0 20px; }
+    .q-grid-2, .q-grid-3 { grid-template-columns: 1fr; }
+    .submit-area { flex-direction: column; align-items: flex-start; }
+    .btn-submit { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon"></div>
+    <span class="logo-text">AI<span>Solution</span>.uz</span>
+  </a>
+  <span class="header-badge">Техническая анкета</span>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">AI Voice Agent · Collection System</div>
+    <h1>Анкета для подготовки<br><span>коммерческого предложения</span></h1>
+    <p>Ответьте на вопросы ниже — на основании ответов будет подготовлено техническое задание и точный расчёт стоимости.</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">0 / 20</span>
+  </div>
+
+  <form id="mainForm" novalidate>
+
+    <!-- BLOCK 1 — Цели и объём -->
+    <div class="section-block">
+      <div class="section-title">Цели и объём</div>
+
+      <div class="question">
+        <label><span class="q-num">01</span>Основная цель проекта</label>
+        <textarea name="q1" placeholder="Например: автоматизация обзвона должников, уведомление клиентов о задолженности..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">02</span>Объём звонков</label>
+        <div class="q-grid-3">
+          <input type="text" name="q2_day" placeholder="В день">
+          <input type="text" name="q2_month" placeholder="В месяц">
+          <input type="text" name="q2_parallel" placeholder="Одновременно">
+        </div>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">03</span>Категории клиентов, с которыми работает AI</label>
+        <textarea name="q3" placeholder="Физические лица, юридические лица, VIP-клиенты..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">04</span>Этапы задолженности для обработки</label>
+        <textarea name="q4" placeholder="Soft (1–30 дней), Hard (30–90), NPL (90+)..."></textarea>
+      </div>
+    </div>
+
+    <!-- BLOCK 2 — Языки и диалог -->
+    <div class="section-block">
+      <div class="section-title">Языки и диалог</div>
+
+      <div class="question">
+        <label><span class="q-num">05</span>Языки, на которых должен работать AI</label>
+        <div class="chip-group" id="langChips">
+          <span class="chip" data-val="uz">Узбекский</span>
+          <span class="chip" data-val="ru">Русский</span>
+          <span class="chip" data-val="en">Английский</span>
+          <span class="chip" data-val="uz-kirill">Узб. (кирилл)</span>
+          <span class="chip" data-val="kk">Каракалп.</span>
+        </div>
+        <input type="hidden" name="q5" id="q5val">
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">08</span>Режим диалога AI</label>
+        <div class="chip-group">
+          <span class="chip" data-group="q8" data-val="script">По сценарию</span>
+          <span class="chip" data-group="q8" data-val="free">Свободный диалог</span>
+          <span class="chip" data-group="q8" data-val="hybrid">Гибрид</span>
+        </div>
+        <input type="hidden" name="q8" id="q8val">
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">15</span>Голос AI</label>
+        <div class="chip-group">
+          <span class="chip" data-group="q15" data-val="male">Мужской</span>
+          <span class="chip" data-group="q15" data-val="female">Женский</span>
+          <span class="chip" data-group="q15" data-val="neutral">Нейтральный</span>
+        </div>
+        <input type="hidden" name="q15" id="q15val">
+      </div>
+    </div>
+
+    <!-- BLOCK 3 — Данные и интеграции -->
+    <div class="section-block">
+      <div class="section-title">Данные и интеграции</div>
+
+      <div class="question">
+        <label><span class="q-num">06</span>Данные, передаваемые AI перед звонком</label>
+        <textarea name="q6" placeholder="ФИО, сумма долга, дата последнего платежа, контактный номер..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">07</span>Источники данных</label>
+        <div class="chip-group" id="srcChips">
+          <span class="chip" data-group="q7" data-val="crm">CRM</span>
+          <span class="chip" data-group="q7" data-val="api">API</span>
+          <span class="chip" data-group="q7" data-val="excel">Excel / CSV</span>
+          <span class="chip" data-group="q7" data-val="bank">Банковская система</span>
+          <span class="chip" data-group="q7" data-val="erp">ERP</span>
+          <span class="chip" data-group="q7" data-val="other">Другое</span>
+        </div>
+        <input type="hidden" name="q7" id="q7val">
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">11</span>Требуемые интеграции</label>
+        <textarea name="q11" placeholder="CRM, Telegram-уведомления, WhatsApp, email, 1C, банковский API..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">12</span>Система телефонии</label>
+        <input type="text" name="q12" placeholder="Asterisk, Avaya, Билайн/Beeline, Twilio, другое...">
+      </div>
+    </div>
+
+    <!-- BLOCK 4 — После звонка -->
+    <div class="section-block">
+      <div class="section-title">Логика после звонка</div>
+
+      <div class="question">
+        <label><span class="q-num">09</span>Действия AI после звонка</label>
+        <textarea name="q9" placeholder="Сохранить результат в CRM, отправить SMS, создать задачу менеджеру..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">10</span>Статусы для сохранения</label>
+        <textarea name="q10" placeholder="Обещание оплатить, недозвон, отказ, оплачено, перезвонить..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">14</span>Отчёты и аналитика</label>
+        <textarea name="q14" placeholder="Ежедневные отчёты, воронка звонков, эффективность агента, сводка по долгам..."></textarea>
+      </div>
+    </div>
+
+    <!-- BLOCK 5 — Инфраструктура -->
+    <div class="section-block">
+      <div class="section-title">Инфраструктура и безопасность</div>
+
+      <div class="question">
+        <label><span class="q-num">13</span>Требования к безопасности данных</label>
+        <textarea name="q13" placeholder="GDPR, шифрование звонков, NDA, ограничения по хранению данных..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">16</span>Размещение системы</label>
+        <div class="chip-group">
+          <span class="chip" data-group="q16" data-val="cloud">Облако</span>
+          <span class="chip" data-group="q16" data-val="on-prem">Локально (on-premise)</span>
+          <span class="chip" data-group="q16" data-val="hybrid">Гибрид</span>
+        </div>
+        <input type="hidden" name="q16" id="q16val">
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">18</span>Планируется ли масштабирование на другие подразделения?</label>
+        <div class="chip-group">
+          <span class="chip" data-group="q18" data-val="yes">Да</span>
+          <span class="chip" data-group="q18" data-val="no">Нет</span>
+          <span class="chip" data-group="q18" data-val="maybe">Возможно</span>
+        </div>
+        <input type="hidden" name="q18" id="q18val">
+      </div>
+    </div>
+
+    <!-- BLOCK 6 — KPI и бюджет -->
+    <div class="section-block">
+      <div class="section-title">KPI и бюджет</div>
+
+      <div class="question">
+        <label><span class="q-num">17</span>KPI для оценки проекта</label>
+        <textarea name="q17" placeholder="% дозвона, % обещаний, % закрытых долгов, стоимость одного звонка..."></textarea>
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">19</span>Ориентировочный бюджет проекта</label>
+        <input type="text" name="q19" placeholder="Например: $5 000–10 000, или 'не определён'">
+      </div>
+
+      <div class="question">
+        <label><span class="q-num">20</span>Сроки</label>
+        <div class="q-grid-2">
+          <input type="text" name="q20_pilot" placeholder="Пилот (например: 2 недели)">
+          <input type="text" name="q20_full" placeholder="Полное внедрение">
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-section">
+      <div class="section-title">Контактные данные</div>
+      <div class="q-grid-2">
+        <div class="question" style="margin-bottom:0">
+          <label>Контактное лицо</label>
+          <input type="text" name="contact_name" placeholder="Имя и фамилия">
+        </div>
+        <div class="question" style="margin-bottom:0">
+          <label>Компания</label>
+          <input type="text" name="contact_company" placeholder="Название организации">
+        </div>
+        <div class="question" style="margin-bottom:0">
+          <label>Телефон / Telegram</label>
+          <input type="text" name="contact_phone" placeholder="+998 ...">
+        </div>
+        <div class="question" style="margin-bottom:0">
+          <label>Email</label>
+          <input type="text" name="contact_email" placeholder="email@company.com">
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <p class="submit-note">После отправки наш специалист свяжется с вами в течение 1 рабочего дня с готовым КП.</p>
+      <button type="submit" class="btn-submit">
+        Отправить анкету
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+  </form>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <strong>AISolution.uz</strong> · AI Automation for Business · Tashkent, Uzbekistan
+</footer>
+
+<!-- TOAST -->
+<div id="toast">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <circle cx="8" cy="8" r="7" stroke="#34d399" stroke-width="1.5"/>
+    <path d="M5 8l2 2 4-4" stroke="#34d399" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  Анкета успешно отправлена!
+</div>
+
+<script>
+  // ── CHIPS ──
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const group = chip.dataset.group;
+      const val   = chip.dataset.val;
+
+      if (group) {
+        // single-select within group
+        document.querySelectorAll(`.chip[data-group="${group}"]`).forEach(c => c.classList.remove('active'));
+        chip.classList.toggle('active');
+        const active = document.querySelector(`.chip[data-group="${group}"].active`);
+        const hidden = document.getElementById(group + 'val');
+        if (hidden) hidden.value = active ? active.dataset.val : '';
+      } else {
+        // multi-select (languages)
+        chip.classList.toggle('active');
+        const vals = [...document.querySelectorAll('#langChips .chip.active')].map(c => c.dataset.val).join(',');
+        document.getElementById('q5val').value = vals;
+      }
+      updateProgress();
+    });
+  });
+
+  // ── PROGRESS ──
+  const inputs = document.querySelectorAll('input[type="text"], textarea');
+
+  function countFilled() {
+    let filled = 0;
+    inputs.forEach(el => { if (el.value.trim()) filled++; });
+    // also count chip selections
+    ['q5', 'q7', 'q8', 'q15', 'q16', 'q18'].forEach(id => {
+      const el = document.getElementById(id + 'val');
+      if (el && el.value) filled++;
+    });
+    return Math.min(filled, 20);
+  }
+
+  function updateProgress() {
+    const n = countFilled();
+    const pct = Math.round((n / 20) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = n + ' / 20';
+  }
+
+  inputs.forEach(el => el.addEventListener('input', updateProgress));
+
+  // ── SUBMIT ──
+  const BOT_TOKEN = '8604900093:AAH6_OavfFsqGNgnDQdiLCkd84Lqqt0oPfU';
+  const CHAT_ID   = '800060636';
+
+  document.getElementById('mainForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Отправляется...';
+
+    const fd = new FormData(this);
+    const get = k => fd.get(k) || '—';
+
+    const chipLabels = {
+      uz: 'Узбекский', ru: 'Русский', en: 'Английский',
+      'uz-kirill': 'Узб. (кирилл)', kk: 'Каракалп.',
+      crm: 'CRM', api: 'API', excel: 'Excel/CSV',
+      bank: 'Банк. система', erp: 'ERP', other: 'Другое',
+      script: 'По сценарию', free: 'Свободный диалог', hybrid: 'Гибрид',
+      male: 'Мужской', female: 'Женский', neutral: 'Нейтральный',
+      cloud: 'Облако', 'on-prem': 'Локально', yes: 'Да', no: 'Нет', maybe: 'Возможно'
+    };
+
+    const label = vals => vals ? vals.split(',').map(v => chipLabels[v] || v).join(', ') : '—';
+
+    const msg = `
+🤖 <b>Новая анкета — AI Voice Agent</b>
+━━━━━━━━━━━━━━━━━━━━
+
+<b>👤 Контакт</b>
+• Имя: ${get('contact_name')}
+• Компания: ${get('contact_company')}
+• Телефон/TG: ${get('contact_phone')}
+• Email: ${get('contact_email')}
+
+━━━━━━━━━━━━━━━━━━━━
+<b>🎯 Цели и объём</b>
+• Цель: ${get('q1')}
+• Звонков в день: ${get('q2_day')} / месяц: ${get('q2_month')} / одновременно: ${get('q2_parallel')}
+• Клиенты: ${get('q3')}
+• Этапы долга: ${get('q4')}
+
+━━━━━━━━━━━━━━━━━━━━
+<b>🗣 Языки и диалог</b>
+• Языки: ${label(get('q5'))}
+• Режим: ${label(get('q8'))}
+• Голос: ${label(get('q15'))}
+
+━━━━━━━━━━━━━━━━━━━━
+<b>🔗 Данные и интеграции</b>
+• Данные перед звонком: ${get('q6')}
+• Источники: ${label(get('q7'))}
+• Интеграции: ${get('q11')}
+• Телефония: ${get('q12')}
+
+━━━━━━━━━━━━━━━━━━━━
+<b>📋 После звонка</b>
+• Действия AI: ${get('q9')}
+• Статусы: ${get('q10')}
+• Отчёты: ${get('q14')}
+
+━━━━━━━━━━━━━━━━━━━━
+<b>🛡 Инфраструктура</b>
+• Безопасность: ${get('q13')}
+• Размещение: ${label(get('q16'))}
+• Масштабирование: ${label(get('q18'))}
+
+━━━━━━━━━━━━━━━━━━━━
+<b>💰 KPI и бюджет</b>
+• KPI: ${get('q17')}
+• Бюджет: ${get('q19')}
+• Пилот: ${get('q20_pilot')} | Полное внедрение: ${get('q20_full')}
+`.trim();
+
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+        document.getElementById('mainForm').reset();
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        ['q5','q7','q8','q15','q16','q18'].forEach(id => {
+          const el = document.getElementById(id + 'val');
+          if (el) el.value = '';
+        });
+        updateProgress();
+      } else {
+        alert('Ошибка отправки. Попробуйте ещё раз.');
+      }
+    } catch(err) {
+      alert('Ошибка сети. Проверьте подключение.');
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = 'Отправить анкету <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  });
+</script>
+</body>
+</html>
