@@ -789,13 +789,22 @@
 `.trim();
 
     try {
-      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      const formData = {};
+      fd.forEach((v, k) => formData[k] = v);
+      formData.q5  = document.getElementById('q5val').value;
+      formData.q7  = document.getElementById('q7val').value;
+      formData.q8  = document.getElementById('q8val').value;
+      formData.q15 = document.getElementById('q15val').value;
+      formData.q16 = document.getElementById('q16val').value;
+      formData.q18 = document.getElementById('q18val').value;
+
+      const res = await fetch('/api/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'HTML' })
+        body: JSON.stringify(formData)
       });
       const data = await res.json();
-      if (data.ok) {
+      if (data.success) {
         const toast = document.getElementById('toast');
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 4000);
